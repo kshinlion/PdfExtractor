@@ -21,7 +21,6 @@ class Program
     string extractedText = textExtractor(filePath);
     guestName(extractedText);
 
-
     // Print values
     foreach (var entry in guestInfo)
     {
@@ -54,8 +53,10 @@ class Program
 
     using (var document = PdfDocument.Open(inputPath))
     {
-      var firstPage = document.GetPage(1);
-      extractedText = firstPage.Text;
+      foreach (var page in document.GetPages())
+      {
+        extractedText += page.Text + "\n"; // Preserve line breaks between pages
+      }
     }
 
     File.WriteAllText(outputPath, extractedText);
@@ -78,4 +79,35 @@ class Program
     string guestName = content.Substring(guestIndex + "Guest".Length, departureIndex - (guestIndex + "Guest".Length)).Trim();
     Console.WriteLine($"Guest Name: {guestName}");
   }
+
+  static void extractPaymentDetails(string content, Dictionary<string, string> guestInfo)
+  {
+    string anchor = "Credit Card Receipt";
+    int anchorIndex = content.IndexOf(anchor);
+
+    if (anchorIndex == -1)
+    {
+      Console.WriteLine("Could not locate payment anchor.");
+      return;
+    }
+
+    // Look backward for date (dd MMM yyyy)
+    string beforeAnchor = content.Substring(0, anchorIndex);
+    var dateMatch = System.Text.RegularExpressions.Regex.Matches(beforeAnchor, @"\d{2} \w{3} \d{4}");
+    string paymentDate = dateMatch.Count > 0 ? dateMatch[dateMatch.Count - 1].Value : "Unknown";
+
+    // Look forward for amount
+    string afterAnchor = content.Substring(anchorIndex);
+    var amountMatch = System.Text.RegularExpressions.Regex.Match(afterAnchor, @"-?\d{1,3}(,\d{3})*(\.\d{2})");
+    string amount = amountMatch.Success ? amountMatch.Value : "Unknown";
+
+    guestInfo["PaymentDate"] = paymentDate;
+    guestInfo["Amount"] = amount;
+
+    Console.WriteLine($"Payment Date: {paymentDate}");
+    Console.WriteLine($"Amount: {amount}");
+  }
+
+
 }
+
