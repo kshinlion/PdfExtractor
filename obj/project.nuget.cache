@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "hCd8R/B/FS8=",
+  "dgSpecHash": "J9cd/aaQsKI=",
   "success": true,
   "projectFilePath": "C:\\repos\\PdfExtractor\\PdfExtractor.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\trill\\.nuget\\packages\\pdfpig\\0.1.11\\pdfpig.0.1.11.nupkg.sha512"
+  ],
   "logs": []
 }

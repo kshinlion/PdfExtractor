@@ -12,3 +12,13 @@ C:\repos\PdfExtractor\obj\Debug\net9.0\refint\PdfExtractor.dll
 C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.pdb
 C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.genruntimeconfig.cache
 C:\repos\PdfExtractor\obj\Debug\net9.0\ref\PdfExtractor.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.Core.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.DocumentLayoutAnalysis.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.Fonts.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.Package.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.Tokenization.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.Tokens.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\UglyToad.PdfPig.dll
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.csproj.AssemblyReference.cache
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.sourcelink.json
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtra.1B7CFB41.Up2Date
