@@ -15,29 +15,40 @@ class Program
       return;
     }
 
-    try
-    {
-      textExtractor(filePath);
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"An error occurred: {ex.Message}");
-    }
+    string extractedText = textExtractor(filePath);
+    guestName(extractedText);
+
   }
 
-  static void textExtractor(string inputPath)
+  static string textExtractor(string inputPath)
   {
     string outputPath = "output.txt";
     string extractedText = "";
 
     using (var document = PdfDocument.Open(inputPath))
     {
-      // Extract text from the first page only
-      var firstPage = document.GetPage(1); // Get the first page
-      extractedText = firstPage.Text; // Extract text from the first page
+      var firstPage = document.GetPage(1);
+      extractedText = firstPage.Text;
     }
 
     File.WriteAllText(outputPath, extractedText);
     Console.WriteLine($"Text extracted to: {outputPath}");
+
+    return extractedText;
+  }
+
+  static void guestName(string content)
+  {
+    int guestIndex = content.IndexOf("Guest");
+    int departureIndex = content.IndexOf("Departure");
+
+    if (guestIndex == -1 || departureIndex == -1 || departureIndex <= guestIndex)
+    {
+      Console.WriteLine("Could not locate guest name.");
+      return;
+    }
+
+    string guestName = content.Substring(guestIndex + "Guest".Length, departureIndex - (guestIndex + "Guest".Length)).Trim();
+    Console.WriteLine($"Guest Name: {guestName}");
   }
 }
