@@ -1,0 +1,14 @@
+C:\repos\PdfExtractor\bin\Debug\net9.0\PdfExtractor.exe
+C:\repos\PdfExtractor\bin\Debug\net9.0\PdfExtractor.deps.json
+C:\repos\PdfExtractor\bin\Debug\net9.0\PdfExtractor.runtimeconfig.json
+C:\repos\PdfExtractor\bin\Debug\net9.0\PdfExtractor.dll
+C:\repos\PdfExtractor\bin\Debug\net9.0\PdfExtractor.pdb
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.AssemblyInfoInputs.cache
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.AssemblyInfo.cs
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.csproj.CoreCompileInputs.cache
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.dll
+C:\repos\PdfExtractor\obj\Debug\net9.0\refint\PdfExtractor.dll
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.pdb
+C:\repos\PdfExtractor\obj\Debug\net9.0\PdfExtractor.genruntimeconfig.cache
+C:\repos\PdfExtractor\obj\Debug\net9.0\ref\PdfExtractor.dll
