@@ -32,10 +32,9 @@ class Program
 
     using (var document = PdfDocument.Open(inputPath))
     {
-      foreach (var page in document.GetPages())
-      {
-        extractedText += page.Text + Environment.NewLine;
-      }
+      // Extract text from the first page only
+      var firstPage = document.GetPage(1); // Get the first page
+      extractedText = firstPage.Text; // Extract text from the first page
     }
 
     File.WriteAllText(outputPath, extractedText);
