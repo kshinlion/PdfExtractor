@@ -6,10 +6,28 @@ class Program
 {
   static void Main(string[] args)
   {
-    string inputPath = "C:/General Files/Projects/Travel Expenses/08. Invoice Aug/Mr Changman Jo #3310 31 Aug - 30 Sep 2025.pdf";
+    Console.WriteLine("Please enter the path of the PDF file:");
+    string? filePath = Console.ReadLine();
+
+    if (string.IsNullOrEmpty(filePath))
+    {
+      Console.WriteLine("File path cannot be null or empty.");
+      return;
+    }
+
+    try
+    {
+      textExtractor(filePath);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"An error occurred: {ex.Message}");
+    }
+  }
+
+  static void textExtractor(string inputPath)
+  {
     string outputPath = "output.txt";
-
-
     string extractedText = "";
 
     using (var document = PdfDocument.Open(inputPath))
