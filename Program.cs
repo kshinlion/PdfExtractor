@@ -16,10 +16,20 @@ class Program
     guestInfo["Amount"] = "";
 
     string filePath = getFilePath();
-    guestInfo["Filename"] = extractFilename(filePath);
-
     string extractedText = textExtractor(filePath);
-    guestName(extractedText);
+
+    guestInfo["Filename"] = extractFilename(filePath);
+    guestInfo["GuestName"] = guestName(extractedText);
+
+    (var paymentDate, var amount) = extractPaymentDetails(extractedText);
+    guestInfo["PaymentDate"] = paymentDate;
+    guestInfo["Amount"] = amount;
+
+    if (requiresManualCheck(extractedText))
+    {
+      guestInfo["PaymentDate"] = "Need manual check";
+      guestInfo["Amount"] = "Need manual check";
+    }
 
     // Print values
     foreach (var entry in guestInfo)
@@ -65,7 +75,7 @@ class Program
     return extractedText;
   }
 
-  static void guestName(string content)
+  static string guestName(string content)
   {
     int guestIndex = content.IndexOf("Guest");
     int departureIndex = content.IndexOf("Departure");
@@ -73,14 +83,15 @@ class Program
     if (guestIndex == -1 || departureIndex == -1 || departureIndex <= guestIndex)
     {
       Console.WriteLine("Could not locate guest name.");
-      return;
+      return "Need manual check";
     }
 
     string guestName = content.Substring(guestIndex + "Guest".Length, departureIndex - (guestIndex + "Guest".Length)).Trim();
-    Console.WriteLine($"Guest Name: {guestName}");
+
+    return guestName;
   }
 
-  static void extractPaymentDetails(string content, Dictionary<string, string> guestInfo)
+  static (string paymentDate, string amount) extractPaymentDetails(string content)
   {
     string anchor = "Credit Card Receipt";
     int anchorIndex = content.IndexOf(anchor);
@@ -88,7 +99,7 @@ class Program
     if (anchorIndex == -1)
     {
       Console.WriteLine("Could not locate payment anchor.");
-      return;
+      return ("Need manual check", "Need manual check");
     }
 
     // Look backward for date (dd MMM yyyy)
@@ -101,13 +112,20 @@ class Program
     var amountMatch = System.Text.RegularExpressions.Regex.Match(afterAnchor, @"-?\d{1,3}(,\d{3})*(\.\d{2})");
     string amount = amountMatch.Success ? amountMatch.Value : "Unknown";
 
-    guestInfo["PaymentDate"] = paymentDate;
-    guestInfo["Amount"] = amount;
-
-    Console.WriteLine($"Payment Date: {paymentDate}");
-    Console.WriteLine($"Amount: {amount}");
+    return (paymentDate, amount);
   }
 
 
+  static bool requiresManualCheck(string content)
+  {
+    int creditCardCount = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Card Receipt").Count;
+    int creditTransferCount = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Transfer Receipt").Count;
+    int creditCardRefund = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Card Refund").Count;
+
+    return creditCardCount > 1 || creditTransferCount > 0 || creditCardRefund > 0;
+  }
+
 }
+
+
 
