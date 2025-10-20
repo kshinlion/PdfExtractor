@@ -6,18 +6,45 @@ class Program
 {
   static void Main(string[] args)
   {
+    // Create a dictionary to store guest info
+    Dictionary<string, string> guestInfo = new Dictionary<string, string>();
+
+    // Add entries
+    guestInfo["Filename"] = "";
+    guestInfo["GuestName"] = "";
+    guestInfo["PaymentDate"] = "";
+    guestInfo["Amount"] = "";
+
+    string filePath = getFilePath();
+    guestInfo["Filename"] = extractFilename(filePath);
+
+    string extractedText = textExtractor(filePath);
+    guestName(extractedText);
+
+
+    // Print values
+    foreach (var entry in guestInfo)
+    {
+      Console.WriteLine($"{entry.Key}: {entry.Value}");
+    }
+  }
+
+  static string getFilePath()
+  {
     Console.WriteLine("Please enter the path of the PDF file:");
     string? filePath = Console.ReadLine();
 
     if (string.IsNullOrEmpty(filePath))
     {
       Console.WriteLine("File path cannot be null or empty.");
-      return;
+      return "error";
     }
+    return filePath;
+  }
 
-    string extractedText = textExtractor(filePath);
-    guestName(extractedText);
-
+  static string extractFilename(string fullPath)
+  {
+    return Path.GetFileName(fullPath);
   }
 
   static string textExtractor(string inputPath)
