@@ -1,47 +1,60 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using UglyToad.PdfPig;
 
 class Program
 {
   static void Main(string[] args)
   {
-    //Initializing Dictionary
-    Dictionary<string, string> guestInfo = new Dictionary<string, string>();
-    guestInfo["Filename"] = "";
-    guestInfo["GuestName"] = "";
-    guestInfo["PaymentDate"] = "";
-    guestInfo["Amount"] = "";
-    guestInfo["Remark"] = "";
-
-    string filePath = getFilePath();
-    string extractedText = textExtractor(filePath);
-
-    guestInfo["Filename"] = extractFilename(filePath);
-    guestInfo["GuestName"] = guestName(extractedText);
-
-
-    //Imitating Short Circuit logic
-    if (guestInfo["GuestName"] == "")
+    List<string> files = getFilePaths();
+    if (files.Count == 0)
     {
-      Console.WriteLine("Cannot locate guest name");
-      guestInfo["Remark"] = "Need Manual Check";
-    }
-    else if (requiresManualCheck(extractedText))
-    {
-      guestInfo["Remark"] = "Need Manual Check";
-    }
-    else
-    {
-      (var paymentDate, var amount) = extractPaymentDetails(extractedText);
-      guestInfo["PaymentDate"] = paymentDate;
-      guestInfo["Amount"] = amount;
+      Console.WriteLine("No files to process. Exiting.");
+      return;
     }
 
-    // Printing values
-    foreach (var entry in guestInfo)
+    foreach (var filePath in files)
     {
-      Console.WriteLine($"{entry.Key}: {entry.Value}");
+      //Initializing Dictionary per file
+      Dictionary<string, string> guestInfo = new Dictionary<string, string>();
+      guestInfo["Filename"] = "";
+      guestInfo["GuestName"] = "";
+      guestInfo["PaymentDate"] = "";
+      guestInfo["Amount"] = "";
+      guestInfo["Remark"] = "";
+
+      Console.WriteLine($"Processing file: {filePath}");
+
+      string extractedText = textExtractor(filePath);
+
+      guestInfo["Filename"] = extractFilename(filePath);
+      guestInfo["GuestName"] = guestName(extractedText);
+
+      //Imitating Short Circuit logic
+      if (guestInfo["GuestName"] == "")
+      {
+        Console.WriteLine("Cannot locate guest name");
+        guestInfo["Remark"] = "Need Manual Check";
+      }
+      else if (requiresManualCheck(extractedText))
+      {
+        guestInfo["Remark"] = "Need Manual Check";
+      }
+      else
+      {
+        (var paymentDate, var amount) = extractPaymentDetails(extractedText);
+        guestInfo["PaymentDate"] = paymentDate;
+        guestInfo["Amount"] = amount;
+      }
+
+      // Printing values
+      foreach (var entry in guestInfo)
+      {
+        Console.WriteLine($"{entry.Key}: {entry.Value}");
+      }
+
+      Console.WriteLine("-----");
     }
   }
 
@@ -120,7 +133,6 @@ class Program
     return (paymentDate, amount);
   }
 
-
   static bool requiresManualCheck(string content)
   {
     int creditCardCount = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Card Receipt").Count;
@@ -129,4 +141,27 @@ class Program
 
     return creditCardCount != 1 || creditTransferCount > 0 || creditCardRefund > 0;
   }
+
+  static List<string> getFilePaths()
+  {
+    Console.Write("Enter folder path: ");
+    string folderPath = Console.ReadLine()?.Trim() ?? "";
+
+    if (!Directory.Exists(folderPath))
+    {
+      Console.WriteLine("❌ Invalid folder path.");
+      return new List<string>();
+    }
+
+    // Only PDFs by default; change pattern if you want all files
+    var filePaths = new List<string>(Directory.GetFiles(folderPath, "*.pdf"));
+
+    if (filePaths.Count == 0)
+    {
+      Console.WriteLine("No PDF files found in folder.");
+    }
+
+    return filePaths;
+  }
 }
+
