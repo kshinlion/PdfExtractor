@@ -25,14 +25,10 @@ class Program
     if (guestInfo["GuestName"] == "")
     {
       Console.WriteLine("Cannot locate guest name");
-      guestInfo["PaymentDate"] = "";
-      guestInfo["Amount"] = "";
       guestInfo["Remark"] = "Need Manual Check";
     }
     else if (requiresManualCheck(extractedText))
     {
-      guestInfo["PaymentDate"] = "";
-      guestInfo["Amount"] = "";
       guestInfo["Remark"] = "Need Manual Check";
     }
     else
