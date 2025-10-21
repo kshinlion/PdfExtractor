@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using UglyToad.PdfPig;
 
 class Program
@@ -14,15 +15,18 @@ class Program
       return;
     }
 
+    //Initialize Dictionary
+    Dictionary<string, string> guestInfo = new Dictionary<string, string>();
+    guestInfo["Filename"] = "";
+    guestInfo["GuestName"] = "";
+    guestInfo["PaymentDate"] = "";
+    guestInfo["Amount"] = "";
+    guestInfo["Remark"] = "";
+
     foreach (var filePath in files)
     {
-      //Initializing Dictionary per file
-      Dictionary<string, string> guestInfo = new Dictionary<string, string>();
-      guestInfo["Filename"] = "";
-      guestInfo["GuestName"] = "";
-      guestInfo["PaymentDate"] = "";
-      guestInfo["Amount"] = "";
-      guestInfo["Remark"] = "";
+
+      dictionaryReset(guestInfo);
 
       Console.WriteLine($"Processing file: {filePath}");
 
@@ -56,19 +60,6 @@ class Program
 
       Console.WriteLine("-----");
     }
-  }
-
-  static string getFilePath()
-  {
-    Console.WriteLine("Please enter the path of the PDF file:");
-    string? filePath = Console.ReadLine();
-
-    if (string.IsNullOrEmpty(filePath))
-    {
-      Console.WriteLine("File path cannot be null or empty.");
-      return "error";
-    }
-    return filePath;
   }
 
   static string extractFilename(string fullPath)
@@ -163,5 +154,23 @@ class Program
 
     return filePaths;
   }
-}
 
+  static void dictionaryReset(Dictionary<string, string> dict)
+  {
+    // copy keys so we can modify values safely even if keys change
+    var keys = dict.Keys.ToList();
+
+    if (keys.Count == 0)
+    {
+      // optional: seed default keys if dictionary is empty
+      string[] defaults = { "Filename", "GuestName", "PaymentDate", "Amount", "Remark" };
+      foreach (var k in defaults) dict[k] = "";
+      return;
+    }
+
+    foreach (var k in keys)
+    {
+      dict[k] = "";
+    }
+  }
+}

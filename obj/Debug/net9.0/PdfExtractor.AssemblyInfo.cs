@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PdfExtractor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+faace3227ee3c15166a5e8eabc1db669b1d769c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d9980bc68f1975a165109d4ed3682a9616196fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("PdfExtractor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PdfExtractor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
