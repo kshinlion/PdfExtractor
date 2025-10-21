@@ -89,7 +89,6 @@ class Program
 
     if (guestIndex == -1 || departureIndex == -1 || departureIndex <= guestIndex)
     {
-      Console.WriteLine("Could not locate guest name.");
       return "";
     }
 
@@ -105,19 +104,18 @@ class Program
 
     if (anchorIndex == -1)
     {
-      Console.WriteLine("Could not locate payment anchor.");
-      return ("Need manual check", "Need manual check");
+      return ("", "");
     }
 
     // Look backward for date (dd MMM yyyy)
     string beforeAnchor = content.Substring(0, anchorIndex);
     var dateMatch = System.Text.RegularExpressions.Regex.Matches(beforeAnchor, @"\d{2} \w{3} \d{4}");
-    string paymentDate = dateMatch.Count > 0 ? dateMatch[dateMatch.Count - 1].Value : "Unknown";
+    string paymentDate = dateMatch.Count > 0 ? dateMatch[dateMatch.Count - 1].Value : "";
 
     // Look forward for amount
     string afterAnchor = content.Substring(anchorIndex);
     var amountMatch = System.Text.RegularExpressions.Regex.Match(afterAnchor, @"-?\d{1,3}(,\d{3})*(\.\d{2})");
-    string amount = amountMatch.Success ? amountMatch.Value : "Unknown";
+    string amount = amountMatch.Success ? amountMatch.Value : "";
 
     return (paymentDate, amount);
   }
