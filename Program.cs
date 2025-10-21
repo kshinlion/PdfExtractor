@@ -8,58 +8,64 @@ class Program
 {
   static void Main(string[] args)
   {
-    List<string> files = getFilePaths();
-    if (files.Count == 0)
+    var files = getFilePaths();
+    if (files.Count == 0) { Console.WriteLine("No files to process. Exiting."); return; }
+
+    var guestInfo = new Dictionary<string, string>
     {
-      Console.WriteLine("No files to process. Exiting.");
-      return;
+      ["Filename"] = "",
+      ["GuestName"] = "",
+      ["PaymentDate"] = "",
+      ["Amount"] = "",
+      ["Remark"] = ""
+    };
+
+    string outputPath = "extracted_guest_info.txt";
+
+    using (var sw = new StreamWriter(outputPath, false))
+    {
+
+      string sep = " / ";
+      sw.WriteLine(string.Join(sep, guestInfo.Keys));
+
+      foreach (var filePath in files)
+      {
+
+        dictionaryReset(guestInfo);
+
+        Console.WriteLine($"Processing file: {filePath}");
+        string extractedText = textExtractor(filePath);
+
+        guestInfo["Filename"] = extractFilename(filePath);
+        guestInfo["GuestName"] = guestName(extractedText);
+
+        if (guestInfo["GuestName"] == "")
+        {
+          Console.WriteLine("Cannot locate guest name");
+          guestInfo["Remark"] = "Need Manual Check";
+        }
+        else if (requiresManualCheck(extractedText))
+        {
+          guestInfo["Remark"] = "Need Manual Check";
+        }
+        else
+        {
+          (var paymentDate, var amount) = extractPaymentDetails(extractedText);
+          guestInfo["PaymentDate"] = paymentDate;
+          guestInfo["Amount"] = amount;
+        }
+
+
+        var row = guestInfo.Keys.Select(k => Sanitize(guestInfo.TryGetValue(k, out var v) ? v : ""));
+        sw.WriteLine(string.Join(sep, row));
+
+
+        foreach (var entry in guestInfo) Console.WriteLine($"{entry.Key}: {entry.Value}");
+        Console.WriteLine("-----");
+      }
     }
 
-    //Initialize Dictionary
-    Dictionary<string, string> guestInfo = new Dictionary<string, string>();
-    guestInfo["Filename"] = "";
-    guestInfo["GuestName"] = "";
-    guestInfo["PaymentDate"] = "";
-    guestInfo["Amount"] = "";
-    guestInfo["Remark"] = "";
-
-    foreach (var filePath in files)
-    {
-
-      dictionaryReset(guestInfo);
-
-      Console.WriteLine($"Processing file: {filePath}");
-
-      string extractedText = textExtractor(filePath);
-
-      guestInfo["Filename"] = extractFilename(filePath);
-      guestInfo["GuestName"] = guestName(extractedText);
-
-      //Imitating Short Circuit logic
-      if (guestInfo["GuestName"] == "")
-      {
-        Console.WriteLine("Cannot locate guest name");
-        guestInfo["Remark"] = "Need Manual Check";
-      }
-      else if (requiresManualCheck(extractedText))
-      {
-        guestInfo["Remark"] = "Need Manual Check";
-      }
-      else
-      {
-        (var paymentDate, var amount) = extractPaymentDetails(extractedText);
-        guestInfo["PaymentDate"] = paymentDate;
-        guestInfo["Amount"] = amount;
-      }
-
-      // Printing values
-      foreach (var entry in guestInfo)
-      {
-        Console.WriteLine($"{entry.Key}: {entry.Value}");
-      }
-
-      Console.WriteLine("-----");
-    }
+    Console.WriteLine($"Wrote results to: {outputPath}");
   }
 
   static string extractFilename(string fullPath)
@@ -69,7 +75,7 @@ class Program
 
   static string textExtractor(string inputPath)
   {
-    string outputPath = "output.txt";
+
     string extractedText = "";
 
     using (var document = PdfDocument.Open(inputPath))
@@ -79,9 +85,6 @@ class Program
         extractedText += page.Text + "\n"; // Preserve line breaks between pages
       }
     }
-
-    File.WriteAllText(outputPath, extractedText);
-    Console.WriteLine($"Text extracted to: {outputPath}");
 
     return extractedText;
   }
@@ -173,4 +176,11 @@ class Program
       dict[k] = "";
     }
   }
+
+  static string Sanitize(string s)
+  {
+    if (s == null) return "";
+    return s.Replace("\t", " ").Replace("\r", " ").Replace("\n", " ").Trim();
+  }
+
 }
