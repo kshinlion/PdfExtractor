@@ -14,6 +14,7 @@ class Program
     guestInfo["GuestName"] = "";
     guestInfo["PaymentDate"] = "";
     guestInfo["Amount"] = "";
+    guestInfo["Remark"] = "";
 
     string filePath = getFilePath();
     string extractedText = textExtractor(filePath);
@@ -21,14 +22,24 @@ class Program
     guestInfo["Filename"] = extractFilename(filePath);
     guestInfo["GuestName"] = guestName(extractedText);
 
-    (var paymentDate, var amount) = extractPaymentDetails(extractedText);
-    guestInfo["PaymentDate"] = paymentDate;
-    guestInfo["Amount"] = amount;
-
-    if (requiresManualCheck(extractedText))
+    if (guestInfo["GuestName"] == "")
     {
-      guestInfo["PaymentDate"] = "Need manual check";
-      guestInfo["Amount"] = "Need manual check";
+      Console.WriteLine("Cannot locate guest name");
+      guestInfo["PaymentDate"] = "";
+      guestInfo["Amount"] = "";
+      guestInfo["Remark"] = "Need Manual Check";
+    }
+    else if (requiresManualCheck(extractedText))
+    {
+      guestInfo["PaymentDate"] = "";
+      guestInfo["Amount"] = "";
+      guestInfo["Remark"] = "Need Manual Check";
+    }
+    else
+    {
+      (var paymentDate, var amount) = extractPaymentDetails(extractedText);
+      guestInfo["PaymentDate"] = paymentDate;
+      guestInfo["Amount"] = amount;
     }
 
     // Print values
@@ -83,7 +94,7 @@ class Program
     if (guestIndex == -1 || departureIndex == -1 || departureIndex <= guestIndex)
     {
       Console.WriteLine("Could not locate guest name.");
-      return "Need manual check";
+      return "";
     }
 
     string guestName = content.Substring(guestIndex + "Guest".Length, departureIndex - (guestIndex + "Guest".Length)).Trim();
