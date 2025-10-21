@@ -6,10 +6,8 @@ class Program
 {
   static void Main(string[] args)
   {
-    // Create a dictionary to store guest info
+    //Initializing Dictionary
     Dictionary<string, string> guestInfo = new Dictionary<string, string>();
-
-    // Add entries
     guestInfo["Filename"] = "";
     guestInfo["GuestName"] = "";
     guestInfo["PaymentDate"] = "";
@@ -22,6 +20,8 @@ class Program
     guestInfo["Filename"] = extractFilename(filePath);
     guestInfo["GuestName"] = guestName(extractedText);
 
+
+    //Imitating Short Circuit logic
     if (guestInfo["GuestName"] == "")
     {
       Console.WriteLine("Cannot locate guest name");
@@ -38,7 +38,7 @@ class Program
       guestInfo["Amount"] = amount;
     }
 
-    // Print values
+    // Printing values
     foreach (var entry in guestInfo)
     {
       Console.WriteLine($"{entry.Key}: {entry.Value}");
@@ -129,10 +129,6 @@ class Program
     int creditTransferCount = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Transfer Receipt").Count;
     int creditCardRefund = System.Text.RegularExpressions.Regex.Matches(content, @"Credit Card Refund").Count;
 
-    return creditCardCount > 1 || creditTransferCount > 0 || creditCardRefund > 0;
+    return creditCardCount != 1 || creditTransferCount > 0 || creditCardRefund > 0;
   }
-
 }
-
-
-
